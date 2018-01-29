@@ -1,3 +1,5 @@
+%option outfile="lexer.c"
+
 %{
 #include <stdlib.h>
 #include <stdio.h>

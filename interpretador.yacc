@@ -1,11 +1,16 @@
 %{
 #include <stdio.h>
+#include <stdlib.h>
 #include "tabela.h"
 
 int yylex(void);
 void yyerror(char *);
+void inicializa_analise(char *nome_arq);
 
 pilha_contexto *pilha;
+
+// declaracao do arquivo yyin 
+FILE *yyin;
 
 %}
 
@@ -126,6 +131,27 @@ void yyerror(char *s) {
 
 int main(void) {
 	pilha = NULL;
+	
+  
+	char* nome_arq = {"codigo_linguagem.adb"};
+	inicializa_analise(nome_arq);
+	
 	yyparse();
-	return 0;
+
+	fclose(yyin);
+
+	return 0; 
+}
+
+void inicializa_analise(char *nome_arq)
+{
+  FILE *f = fopen(nome_arq, "r");
+
+  if (f == NULL) { 
+    fprintf(stderr,"Nao foi possivel abrir o arquivo de entrada:%s\n",
+       nome_arq);
+    exit(1);
+  }
+
+  yyin = f;
 }
