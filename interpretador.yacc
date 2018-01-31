@@ -14,8 +14,9 @@ FILE *yyin;
 
 %}
 
-%token TYPE INT FLOAT PRINT NUMBER ID
+%token TYPE INT FLOAT PRINT ID FUNCTION PROCEDURE ATTR
 %left '+' '-'
+
 %%
 
 
@@ -72,8 +73,8 @@ decls:
 	;
 	
 decl:
-	TYPE	ID ';'		{	simbolo * s = criar_simbolo((char *) $2, $1); 
-					inserir_simbolo(topo_pilha(pilha), s); }
+	TYPE  ':'  ID ';'		{	simbolo * s = criar_simbolo((char *) $3, $1); 
+						inserir_simbolo(topo_pilha(pilha), s); }
 
 	;
 
@@ -96,7 +97,7 @@ stmt:
 	;
 
 attr: 
-	ID '=' expr ';'		{ 
+	ID ATTR expr ';'		{ 
 	simbolo * s = localizar_simbolo(topo_pilha(pilha), (char *) $1);
 				  if(s == NULL)
 					yyerror("Identificador não declarado");
@@ -106,7 +107,7 @@ attr:
 				}
 expr:
 
-	 NUMBER			{ //printf("%d", $1); 
+	 INT			{ //printf("%d", $1); 
 				  $$ = $1; }
 	| ID			{ 
 simbolo * s = localizar_simbolo(topo_pilha(pilha), (char *) $1);
@@ -117,7 +118,9 @@ simbolo * s = localizar_simbolo(topo_pilha(pilha), (char *) $1);
 					$$ = s->val.dval;
 				  }
 				}
-	| expr'+' expr		{ $$ = $1 + $3; }
+
+	
+	| expr '+' expr		{ $$ = $1 + $3; }
 	| expr '-' expr		{ $$ = $1 - $3;}
 	| '(' expr ')'		{ $$ = $2; }
 	| funCall

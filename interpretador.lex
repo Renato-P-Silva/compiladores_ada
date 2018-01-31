@@ -1,4 +1,5 @@
 %option outfile="lexer.c"
+%option caseless
 
 %{
 #include <stdlib.h>
@@ -11,35 +12,39 @@ void yyerror(char *);
 
 letra	[a-z|A-Z|_] 
 numero	[0-9]
+INT														{numero}+
+FLOAT													{INT}"."{INT}
 identificador	{letra}({letra}|{numero})*
-
 %%
 
 
-{numero}+	{ yylval = atoi(yytext);
-		  		return NUMBER;
-			}
+{INT}	{ yylval = atoi(yytext);
+		  		return INT;
+		}
 
+{FLOAT}	{ yylval = atoi(yytext);
+		  		return FLOAT;
+		}
 
-int			{	yylval = INT;
+int		{	yylval = INT;
 				return TYPE;
-			}
-float		{
+		}
+float	{
 				yylval = FLOAT;
 				return TYPE;
-			}
+		}
 
-PRINT		{	return PRINT; 
-			}
+PRINT	{	return PRINT; 
+		}
 
 {identificador}	{
 			yylval = (int) strdup(yytext);
 			return ID;
 		}
 
-[-+=(){};,]	{	return *yytext; }
+[-+=(){};:,<>]	{	return *yytext; }
 
-
+":="			{return ATTR;}
 
 [ \t\n] 	; /* skip whitespace */
 . 	yyerror("invalid character");

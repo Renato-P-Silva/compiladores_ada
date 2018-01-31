@@ -9,8 +9,8 @@ typedef union valor {
 } valor;
 
 typedef struct simbolo {
-	int tipo;
 	char *lexema;
+	int tipo;	
 	valor val;
 } simbolo;
 

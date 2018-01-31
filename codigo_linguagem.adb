@@ -1,7 +1,5 @@
 int main()
 {
-  int a;
-  float b;
-  a=9+9;
-  b = 3;
+   int : A;
+  A := 9+9;
 }

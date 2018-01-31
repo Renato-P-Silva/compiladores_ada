@@ -43,8 +43,10 @@
      INT = 259,
      FLOAT = 260,
      PRINT = 261,
-     NUMBER = 262,
-     ID = 263
+     ID = 262,
+     FUNCTION = 263,
+     PROCEDURE = 264,
+     ATTR = 265
    };
 #endif
 
