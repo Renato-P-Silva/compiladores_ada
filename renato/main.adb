@@ -19,7 +19,6 @@ procedure Main is
       return A + B;
    end Sum;
 
-
 begin
    if Float(A) >= D and not (B < D and A = 0) then
       H := 30.0 * D;
