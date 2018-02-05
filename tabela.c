@@ -35,7 +35,12 @@ simbolo *  criar_simbolo (char *lexema, int tipo) {
 	simbolo *novo = (simbolo *) malloc(sizeof(simbolo));
 	novo->tipo = tipo;
 	novo->lexema = strdup(lexema);
-	novo->val.dval = 0;
+	if (tipo == T_FLOAT) {
+		novo->val.fval = 0;
+	}
+	else {
+		novo->val.dval = 0;
+	}
 	return novo;
 }
 
@@ -70,10 +75,10 @@ void imprimir_contexto(tabela *t) {
 	no_tabela * temp = t->primeiro;
 	printf("----------------------------------\n");
 	while(temp != NULL) {
-		if(temp->dado->tipo == INT) 
-			printf("\t INT: %s (%d)\n", temp->dado->lexema, temp->dado->val.dval);
+		if(temp->dado->tipo == T_INTEGER) 
+			printf("\t INTEGER: %s (%d)\n", temp->dado->lexema, temp->dado->val.dval);
 		else
-			printf("\t FLOAT: %s (%d)\n", temp->dado->lexema, temp->dado->val.dval);	
+			printf("\t FLOAT: %s (%f)\n", temp->dado->lexema, temp->dado->val.fval);	
 		temp = temp->proximo;
 	}
 	printf("==================================\n");

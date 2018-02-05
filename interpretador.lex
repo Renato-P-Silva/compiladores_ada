@@ -1,53 +1,94 @@
-%option outfile="lexer.c"
 %option caseless
-
 %{
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "y.tab.h"
 void yyerror(char *);
-
+#include "y.tab.h"
 %}
 
-letra	[a-z|A-Z|_] 
-numero	[0-9]
-INT														{numero}+
-FLOAT													{INT}"."{INT}
-identificador	{letra}({letra}|{numero})*
+ID_LETTER										[a-z|A-Z|_]
+DIGIT											[0-9]
+IDENTIFIER										{ID_LETTER}({ID_LETTER}|{DIGIT})*
+
 %%
 
+{DIGIT}+\.{DIGIT}+								{
+													yylval = atof(yytext);
+													return FLOAT;
+												}
 
-{INT}	{ yylval = atoi(yytext);
-		  		return INT;
-		}
+{DIGIT}+										{
+													yylval = atoi(yytext);
+													return INTEGER;
+												}
 
-{FLOAT}	{ yylval = atoi(yytext);
-		  		return FLOAT;
-		}
+integer											{
+													yylval = T_INTEGER;
+													return TYPE;
+												}
 
-int		{	yylval = INT;
-				return TYPE;
-		}
-float	{
-				yylval = FLOAT;
-				return TYPE;
-		}
+float											{
+													yylval = T_FLOAT;
+													return TYPE;
+												}
 
-PRINT	{	return PRINT; 
-		}
+put												{
+													return OUTPUT;
+												}
 
-{identificador}	{
-			yylval = (int) strdup(yytext);
-			return ID;
-		}
+get												{
+													return INPUT;
+												}
 
-[-+=(){};:,<>]	{	return *yytext; }
+function										{
+													return FUNCTION;
+												}
 
-":="			{return ATTR;}
+procedure										{
+													return PROCEDURE;
+												}
+
+return											{
+													return RETURN;
+												}
+
+is												{
+													return IS;
+												}
+
+begin											{
+													return K_BEGIN;
+												}
+
+end												{
+													return END;
+												}
+
+declare											{
+													return DECLARE;
+												}
+
+{IDENTIFIER}									{
+													yylval = (int) strdup(yytext);
+													return ID;
+												}
+
+:=												{
+													return ATTRIBUTION;
+												}
+
+:												{
+													return DECLARATION;
+												}
+
+[-+(){};,=/*]										{
+													return *yytext;
+												}
 
 [ \t\n] 	; /* skip whitespace */
 . 	yyerror("invalid character");
+
 %%
 
 int yywrap(void) {

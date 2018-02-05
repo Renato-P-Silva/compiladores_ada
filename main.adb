@@ -1,4 +1,4 @@
-with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Text_IO;
 with Ada.Integer_Text_IO;
 with Ada.Float_Text_IO;
 
@@ -12,7 +12,7 @@ procedure Main is
    G : Integer := A mod Integer(B);
    H : Float;
    I : Integer;
-   Arr : Array(6) of Float : =(Float(A), B, C, D, E, F, Float(G));
+   Arr : Array(0 .. 6) of Float := (Float(A), B, C, D, E, F, Float(G));
 
    function Sum(A : Float; B : Float) return Float is
    begin
@@ -37,7 +37,7 @@ begin
       I := I + 1;
       exit when I = 7;
    end loop;
-   New_Line;
+   Ada.Text_IO.New_Line;
    declare
       First : Float;
       Second : Float;

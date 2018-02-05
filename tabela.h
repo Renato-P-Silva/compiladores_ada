@@ -5,12 +5,12 @@
 
 typedef union valor {
 	int dval;
-	float fval;
+	double fval;
 } valor;
 
 typedef struct simbolo {
+	long int tipo;
 	char *lexema;
-	int tipo;	
 	valor val;
 } simbolo;
 
