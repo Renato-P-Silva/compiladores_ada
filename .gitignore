@@ -1,0 +1,12 @@
+# Visual Studio 2017 user specific files
+.vs/
+
+# Compiled Object files
+*.exe
+
+# flex files
+*.yy.c
+
+# bison files
+y.tab.c
+y.tab.h
