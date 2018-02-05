@@ -127,7 +127,7 @@ parameter:
 	;
 
 elsif_multi:
-	elsif_multi ELSIF condition THEN stmt
+	elsif_multi ELSIF condition THEN stmts
 	|
 	;
 
