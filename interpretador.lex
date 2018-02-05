@@ -69,20 +69,85 @@ declare											{
 													return DECLARE;
 												}
 
+loop											{
+													return LOOP;
+												}
+
+"exit when"										{
+													return EXIT;
+												}
+
+if												{
+													return IF;
+												}
+
+elif											{
+													return ELSIF;
+												}
+
+else											{
+													return ELSE;
+												}
+
+then											{
+													return THEN;
+												}
+
+array											{
+													return ARRAY;
+												}
+
+
+not												{
+													return NOT;
+												}
+
+and												{
+													return AND;
+												}
+												
+of												{
+													return OF;
+												}
+
+or												{
+													return OR;
+												}
+
+mod												{
+													return MOD;
+												}
+
 {IDENTIFIER}									{
 													yylval = (int) strdup(yytext);
 													return ID;
 												}
 
-:=												{
+".."											{
+													return SET_COMPREHENSION;
+												}
+
+":="											{
 													return ATTRIBUTION;
 												}
 
-:												{
+":"												{
 													return DECLARATION;
 												}
 
-[-+(){};,=/*]										{
+"/="											{
+													return DIFFERENT;
+												}
+
+">="											{
+													return GTE;
+												}
+
+"<="											{
+													return LTE;
+												}
+
+[-+(){};,=/*]									{
 													return *yytext;
 												}
 

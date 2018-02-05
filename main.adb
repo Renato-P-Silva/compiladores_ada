@@ -1,6 +1,6 @@
-with Ada.Text_IO;
-with Ada.Integer_Text_IO;
-with Ada.Float_Text_IO;
+with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
+with Ada.Float_Text_IO; use Ada.Float_Text_IO;
 
 procedure Main is
    A : Integer := 50;
@@ -43,10 +43,10 @@ begin
       Second : Float;
       Result : Float;
    begin
-      Ada.Float_Text_IO.Get(First);
-      Ada.Float_Text_IO.Get(Second);
+      Get(First);
+      Get(Second);
       Result := Sum(First, Second);
-      Ada.Float_Text_IO.Put(Result);
+      Put(Result);
    end;
 
 end Main;

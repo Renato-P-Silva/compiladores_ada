@@ -16,20 +16,17 @@ pilha_contexto *pilha;
 
 %token TYPE PRINT T_INTEGER T_FLOAT INTEGER FLOAT ID INPUT OUTPUT
 %token ATTRIBUTION DECLARATION FUNCTION PROCEDURE RETURN IS K_BEGIN
-%token END DECLARE
-%left '/' '*' '+' '-'
+%token END DECLARE LOOP EXIT IF ELSIF ELSE DIFFERENT GTE LTE NOT AND
+%token OR THEN ARRAY OF SET_COMPREHENSION MOD
+%left '/' '*' MOD '+' '-' AND OR
+
 %%
 
-
 program:
-	program function_def { }
+	program function_definition { }
 	|
-	;
-
-function_def:
-	FUNCTION ID '(' EMPTY_PARAMETER_LIST ')' RETURN TYPE procedure_block ID ';'
+	program procedure_definition { }
 	|
-	PROCEDURE ID '(' EMPTY_PARAMETER_LIST ')' procedure_block ID ';'
 	;
 
 p_declarations:
@@ -40,24 +37,26 @@ p_body:
 	stmts
 	;
 
-data_return:
-	RETURN ID ';'
-	|
-	RETURN FLOAT ';'
-	|
-	RETURN INTEGER ';'
-	|
+function_definition:
+	FUNCTION ID empty_or_parameter_list RETURN TYPE IS		{
+																tabela *contexto = criar_contexto(topo_pilha(pilha));
+																pilha = empilhar_contexto(pilha, contexto);
+															}
+	p_declarations K_BEGIN p_body RETURN expr END ID ';'	{
+																imprimir_contexto(topo_pilha(pilha));
+																desempilhar_contexto(&pilha);
+															}
 	;
 
-procedure_block:
-	IS												{
-														tabela *contexto = criar_contexto(topo_pilha(pilha));
-														pilha = empilhar_contexto(pilha, contexto);
-													}
-	p_declarations K_BEGIN p_body data_return END	{
-														imprimir_contexto(topo_pilha(pilha));
-														desempilhar_contexto(&pilha);
-													}
+procedure_definition:
+	PROCEDURE ID empty_or_parameter_list IS		{
+																tabela *contexto = criar_contexto(topo_pilha(pilha));
+																pilha = empilhar_contexto(pilha, contexto);
+															}
+	p_declarations K_BEGIN p_body END ID ';'	{
+																imprimir_contexto(topo_pilha(pilha));
+																desempilhar_contexto(&pilha);
+															}
 	;
 
 funCall:
@@ -82,6 +81,12 @@ stmts:
 	|
 	;
 
+array_decl:
+	ID DECLARATION ARRAY '('INTEGER SET_COMPREHENSION INTEGER')' OF TYPE ';'
+	|
+	ID DECLARATION ARRAY '('INTEGER SET_COMPREHENSION INTEGER')' OF TYPE ATTRIBUTION '(' args ')'';'
+	;
+
 decl:
 	ID DECLARATION TYPE ';'						{
 													simbolo * s = criar_simbolo((char *) (int) $1, $3); 
@@ -101,24 +106,68 @@ decl:
 												}
 	;
 
-EMPTY_PARAMETER_LIST:
-	PARAMETER_LIST
+declaration:
+	DECLARE stmts K_BEGIN stmts END ';'
+	;
+
+empty_or_parameter_list:
+	'(' parameter_list ')'
 	|
 	;
 
-PARAMETER_LIST:
-	PARAMETER_LIST ';' PARAMETER
+parameter_list:
+	parameter_list ';' parameter
 	|
-	PARAMETER
+	parameter
 	;
 
-PARAMETER:
+parameter:
 	ID DECLARATION TYPE
+	;
+
+elsif_multi:
+	elsif_multi ELSIF condition THEN stmt
+	|
+	;
+
+conditional:
+	IF condition THEN stmts END IF ';'
+	|
+	IF condition THEN stmts elsif_multi ELSE stmts END IF ';'
+	;
+
+condition:
+	NOT expr
+	|
+	expr '=' expr
+	|
+	expr DIFFERENT expr
+	|
+	expr '<' expr
+	|
+	expr '>' expr
+	|
+	expr GTE expr
+	|
+	expr LTE expr
+	|
+	expr OR expr
+	|
+	expr AND expr
+	|
+	'(' condition ')'
+	;
+
+loop:
+	LOOP stmts EXIT condition END LOOP
 	;
 
 stmt:
 	expr ';'
-	| bloco
+	| declaration
+	| array_decl
+	| conditional
+	| loop
 	| attr			
 	| OUTPUT ID ';'								{
 													simbolo * s = localizar_simbolo(topo_pilha(pilha), (char *) (int) $2);
@@ -181,6 +230,10 @@ expr:
 	|
 	expr '/' expr								{
 													$$ = $1 / $3;
+												}
+	|
+	expr MOD expr								{
+													$$ = (int) $1 % (int) $3;
 												}
 	|
 	expr '+' expr								{

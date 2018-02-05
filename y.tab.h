@@ -68,7 +68,23 @@ extern int yydebug;
     IS = 272,
     K_BEGIN = 273,
     END = 274,
-    DECLARE = 275
+    DECLARE = 275,
+    LOOP = 276,
+    EXIT = 277,
+    IF = 278,
+    ELSIF = 279,
+    ELSE = 280,
+    DIFFERENT = 281,
+    GTE = 282,
+    LTE = 283,
+    NOT = 284,
+    AND = 285,
+    OR = 286,
+    THEN = 287,
+    ARRAY = 288,
+    OF = 289,
+    SET_COMPREHENSION = 290,
+    MOD = 291
   };
 #endif
 
