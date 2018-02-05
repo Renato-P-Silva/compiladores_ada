@@ -112,6 +112,7 @@ declaration:
 
 empty_or_parameter_list:
 	'(' parameter_list ')'
+	| '(' ')'
 	|
 	;
 
@@ -165,6 +166,8 @@ loop:
 stmt:
 	expr ';'
 	| declaration
+	| function_definition
+	| procedure_definition
 	| array_decl
 	| conditional
 	| loop
