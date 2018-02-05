@@ -42,7 +42,7 @@ function_definition:
 																tabela *contexto = criar_contexto(topo_pilha(pilha));
 																pilha = empilhar_contexto(pilha, contexto);
 															}
-	p_declarations K_BEGIN p_body RETURN expr END ID ';'	{
+	p_declarations K_BEGIN p_body RETURN expr ';' END ID ';'	{
 																imprimir_contexto(topo_pilha(pilha));
 																desempilhar_contexto(&pilha);
 															}
